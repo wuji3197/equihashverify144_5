@@ -9,7 +9,7 @@ using namespace v8;
 
 #define THROW_ERROR_EXCEPTION(x) Nan::ThrowError(x)
 
-NODE_MODULE(Verify) {
+NAN_METHOD(Verify) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
