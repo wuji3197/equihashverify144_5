@@ -13,12 +13,12 @@ NAN_METHOD(Verify) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
-  if (args.Length() < 2) {
+  if (info.Length() < 2) {
  return THROW_ERROR_EXCEPTION("You must provide two arguments.");
   }
 
-  Local<Object> header = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
-  Local<Object> solution = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+  Local<Object> header = info[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+  Local<Object> solution = info[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
   if(!node::Buffer::HasInstance(header) || !node::Buffer::HasInstance(solution)) {
   return THROW_ERROR_EXCEPTION("Arguments should be buffer objects.");
@@ -32,7 +32,7 @@ NAN_METHOD(Verify) {
   int k = 9;
 
   bool result = verifyEH(hdr, soln, n, k);
-  args.GetReturnValue().Set(result);
+  info.GetReturnValue().Set(result);
 
 }
 
