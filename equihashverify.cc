@@ -7,24 +7,22 @@
 
 using namespace v8;
 
+#define THROW_ERROR_EXCEPTION(x) Nan::ThrowError(x)
 
-void Verify(const v8::FunctionCallbackInfo<Value>& args) {
+NODE_MODULE(Verify) {
   Isolate* isolate = Isolate::GetCurrent();
   HandleScope scope(isolate);
 
   if (args.Length() < 2) {
-  isolate->ThrowException(Exception::TypeError(
-    String::NewFromUtf8(isolate, "Wrong number of arguments")));
-  return;
+ return THROW_ERROR_EXCEPTION("You must provide two arguments.");
   }
 
-  Local<Object> header = args[0]->ToObject();
-  Local<Object> solution = args[1]->ToObject();
+  Local<Object> header = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+  Local<Object> solution = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
   if(!node::Buffer::HasInstance(header) || !node::Buffer::HasInstance(solution)) {
-  isolate->ThrowException(Exception::TypeError(
-    String::NewFromUtf8(isolate, "Arguments should be buffer objects.")));
-  return;
+  return THROW_ERROR_EXCEPTION("Arguments should be buffer objects.");
+
   }
 
   const char *hdr = node::Buffer::Data(header);
@@ -38,8 +36,11 @@ void Verify(const v8::FunctionCallbackInfo<Value>& args) {
 
 }
 
-void Init(Handle<Object> exports) {
-  NODE_SET_METHOD(exports, "verify", Verify);
-}
+//void Init(Handle<Object> exports) {
+//  NODE_SET_METHOD(exports, "verify", Verify);
+//}
+NAN_MODULE_INIT(init) {
+        Nan::Set(target, Nan::New("Verify").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Verify)).ToLocalChecked());
 
-NODE_MODULE(equihashverify, Init)
+}
+//NODE_MODULE(equihashverify, Init)
