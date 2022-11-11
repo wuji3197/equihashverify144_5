@@ -28,8 +28,8 @@ NAN_METHOD(Verify) {
   const char *hdr = node::Buffer::Data(header);
   const char *soln = node::Buffer::Data(solution);
 
-  int n = 210;
-  int k = 9;
+  int n = 144;
+  int k = 5;
 
   bool result = verifyEH(hdr, soln, n, k);
   info.GetReturnValue().Set(result);
